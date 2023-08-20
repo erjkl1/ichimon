@@ -26,5 +26,5 @@ func main() {
 	userController := controller.NewUserController(userUsecase)
 	// taskController := controller.NewTaskController(taskUsecase)
 	e := router.NewRouter(userController)
-	e.Logger.Fatal(e.Start(":3000"))
+	e.Logger.Fatal(e.Start(":8080"))
 }

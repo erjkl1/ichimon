@@ -6,9 +6,11 @@ COPY ./ /back
 RUN go mod tidy \
   && go build
 
+# DEVはあとで消す
 ENV CGO_ENABLED=0 \
   GOOS=linux \
-  GOARCH=amd64
+  GOARCH=amd64\
+  GO_ENV=dev 
 EXPOSE 8080
 
-CMD ["GO_ENV=dev","go", "run", "main.go"]
+CMD ["go", "run", "main.go"]
