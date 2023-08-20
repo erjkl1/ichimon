@@ -1,7 +1,7 @@
 package model
 
 type User struct {
-	App  App `gorm:"embedded"`
+	App `gorm:"embedded"`
 	Email     string    `json:"email" gorm:"unique;not null"`
 	Password  string    `json:"password" gorm:"not null"`
 }

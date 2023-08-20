@@ -11,4 +11,4 @@ ENV CGO_ENABLED=0 \
   GOARCH=amd64
 EXPOSE 8080
 
-CMD ["go", "run", "main.go"]
+CMD ["GO_ENV=dev","go", "run", "main.go"]

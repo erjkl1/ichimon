@@ -1,7 +1,7 @@
 package model
 
 type Question struct {
-	App  App `gorm:"embedded"`
+	App  `gorm:"embedded"`
 	CreatedUser   User    `json:"created_user" gorm:"foreignKey:CreatedUserId; constraint:OnDelete:CASCADE"`
 	UpdatedUser   User    `json:"updated_user" gorm:"foreignKey:UpdatedUserId; constraint:OnDelete:CASCADE"`
 	CreatedUserId   uint `json:"created_user_id" gorm:"not null"`
