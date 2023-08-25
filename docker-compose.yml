@@ -7,8 +7,11 @@ services:
       - "8080:8080"
     working_dir: /back
     tty: true
+    entrypoint: go run migrate/migrate.go
+    env_file: ./back/.env
     depends_on:
-      - db
+      db:
+        condition: service_healthy #DBが応答可能なのを確認してから起動する
   db:
     image: postgres:15.1-alpine
     container_name: db
@@ -19,3 +22,11 @@ services:
       POSTGRES_PASSWORD: test
       POSTGRES_DB: ichimon
     restart: always
+    healthcheck:
+      test: [
+          "CMD-SHELL",
+          "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB || exit 1", #環境変数を参照するときは$$らしい
+        ]
+      interval: 2s
+      timeout: 5s
+      retries: 5
