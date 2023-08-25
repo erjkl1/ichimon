@@ -3,6 +3,8 @@ FROM golang:1.21.0
 WORKDIR /back
 COPY ./ /back
 
+RUN chmod 744 ./compose_up.sh
+
 RUN go mod tidy \
   && go build
 
