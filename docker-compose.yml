@@ -5,10 +5,12 @@ services:
     build: ./back
     ports:
       - "8080:8080"
-    working_dir: /back
+    working_dir: /app
     tty: true
     entrypoint: "./compose_up.sh"
     env_file: ./back/.env
+    volumes:
+      - ./back:/app/
     depends_on:
       db:
         condition: service_healthy #DBが応答可能なのを確認してから起動する
