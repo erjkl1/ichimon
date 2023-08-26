@@ -11,7 +11,6 @@ type ICategoryRepository interface {
 	FindByCategoryId(category *model.Category, subCategoryId uint) error
 	FindBySubCategoryId(category *model.SubCategory, subCategoryId uint) error
 	FindAllCategories(categories *[]model.Category) error
-	// FindAllSubCategoriesByCategoryId(subCategory *model.SubCategory, categoryId uint) error
 }
 
 type categoryRepository struct {
