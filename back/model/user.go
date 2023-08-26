@@ -6,9 +6,9 @@ type User struct {
 	Password  string    `json:"password" gorm:"not null"`
 	Grades []Grade `json:"grades" gorm:"foreignKey:UserId; constraint:OnDelete:CASCADE"`
 	CreatedCategories []Category `json:"created_categories" gorm:"foreignKey:CreatedUserId; constraint:OnDelete:CASCADE"`
-	CreatedSubCategories []Grade `json:"created_sub_categories" gorm:"foreignKey:CreatedUserId; constraint:OnDelete:CASCADE"`
+	CreatedSubCategories []SubCategory `json:"created_sub_categories" gorm:"foreignKey:CreatedUserId; constraint:OnDelete:CASCADE"`
 	CreatedQuestions []Question `json:"created_questions" gorm:"foreignKey:CreatedUserId; constraint:OnDelete:CASCADE"`
-	ModifiedQuestions []Question `json:"modified_questions" gorm:"foreignKey:ModifiedUserId; constraint:OnDelete:CASCADE"`
+	UpdatedQuestions []Question `json:"updateed_questions" gorm:"foreignKey:UpdatedUserId; constraint:OnDelete:CASCADE"`
 }
 
 type UserResponse struct {
