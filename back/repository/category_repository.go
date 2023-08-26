@@ -10,6 +10,8 @@ import (
 type ICategoryRepository interface {
 	FindByCategoryId(category *model.Category, subCategoryId uint) error
 	FindBySubCategoryId(category *model.SubCategory, subCategoryId uint) error
+	FindAllCategories(categories *[]model.Category) error
+	// FindAllSubCategoriesByCategoryId(subCategory *model.SubCategory, categoryId uint) error
 }
 
 type categoryRepository struct {
@@ -29,6 +31,14 @@ func (cr *categoryRepository) FindByCategoryId(category *model.Category, categor
 
 func (cr *categoryRepository) FindBySubCategoryId(category *model.SubCategory, subCategoryId uint) error {
 	if err := cr.db.Where("sub_category_id=?", subCategoryId).First(category).Error; err != nil {
+		return err
+	}
+	return nil
+}
+
+//カテゴリとサブカテゴリを全て検索する
+func (cr *categoryRepository) FindAllCategories(categories *[]model.Category) error {
+	if err := cr.db.Preload("SubCategory").Find(categories).Error; err != nil {
 		return err
 	}
 	return nil

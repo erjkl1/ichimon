@@ -5,6 +5,8 @@ COPY ./ /back
 
 RUN chmod 744 ./compose_up.sh
 
+RUN go get github.com/cosmtrek/air@v1.44.0
+
 RUN go mod tidy \
   && go build
 

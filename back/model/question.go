@@ -16,4 +16,5 @@ type Question struct {
 	Selection4  string    `json:"selection_4"`
 	Answer  bool    `json:"answer"`
 	Description  string    `json:"description"`
+	Grades []Grade `json:"grades" gorm:"foreignKey:QuestionId; constraint:OnDelete:CASCADE"`
 }
