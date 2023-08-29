@@ -8,6 +8,7 @@ import (
 type IQuestionUsecase interface {
 
 	FindById(id uint) (model.QuestionResponse, error)
+	FindAll() ([]model.QuestionResponse, error)
 	FindAllByCategoryId(categoryId uint) ([]model.QuestionResponse, error)
 	FindAllBySubCategoryId(subCategoryId uint) ([]model.QuestionResponse, error)
 	FindAllByCreatedUserId(createdUserId uint) ([]model.QuestionResponse, error)
@@ -34,6 +35,22 @@ func (qu *questionUsecase) FindById(questionId uint) (model.QuestionResponse, er
 	utility.CopyFields(question, &resQuestion)
 	return resQuestion, nil
 }
+
+func (qu *questionUsecase) FindAll() ([]model.QuestionResponse, error) {
+	questions := []model.Question{}
+	if err := qu.tr.FindAll(&questions); err != nil {
+		return nil, err
+	}
+	resQuestions := []model.QuestionResponse{}
+	for _, question := range questions {
+		resQuestion := model.QuestionResponse{}
+		//resQuestionにquestionの値が反映されていることを期待
+		utility.CopyFields(question, &resQuestion)
+		resQuestions = append(resQuestions, resQuestion)
+	}
+	return resQuestions, nil
+}
+
 
 func (qu *questionUsecase) FindAllByCategoryId(categoryId uint) ([]model.QuestionResponse, error) {
 	questions := []model.Question{}
@@ -92,8 +109,6 @@ func (qu *questionUsecase) CreateQuestion(question model.Question) (model.Questi
 	utility.CopyFields(question, &resQuestion)
 	return resQuestion, nil
 }
-
-
 
 // func (qu *questionUsecase) UpdateQuestion(question model.Question, userId uint, questionId uint) (model.QuestionResponse, error) {
 // 	if err := qu.tv.QuestionValidate(question); err != nil {

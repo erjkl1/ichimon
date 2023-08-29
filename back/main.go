@@ -18,13 +18,13 @@ func main() {
 	db := db.NewDB()
 
 	// userValidator := validator.NewUserValidator()
-	// taskValidator := validator.NewTaskValidator()
+	// questionValidator := validator.NewQuestionValidator()
 	userRepository := repository.NewUserRepository(db)
-	// taskRepository := repository.NewTaskRepository(db)
+	questionRepository := repository.NewQuestionRepository(db)
 	userUsecase := usecase.NewUserUsecase(userRepository)
-	// taskUsecase := usecase.NewTaskUsecase(taskRepository, taskValidator)
+	questionUsecase := usecase.NewQuestionUsecase(questionRepository)
 	userController := controller.NewUserController(userUsecase)
-	// taskController := controller.NewTaskController(taskUsecase)
-	e := router.NewRouter(userController)
+	questionController := controller.NewQuestionController(questionUsecase)
+	e := router.NewRouter(userController,questionController)
 	e.Logger.Fatal(e.Start(":8080"))
 }

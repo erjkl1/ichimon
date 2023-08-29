@@ -9,6 +9,7 @@ import (
 
 type IQuestionRepository interface {
 	FindById(question *model.Question, id uint) error
+	FindAll(question *[]model.Question) error
 	FindAllByCategoryId(question *[]model.Question, subCategoryId uint) error
 	FindAllBySubCategoryId(questions *[]model.Question, subCategoryId uint) error
 	FindAllByCreatedUserId(questions *[]model.Question, createdUserId uint) error
@@ -27,6 +28,13 @@ func NewQuestionRepository(db *gorm.DB) IQuestionRepository {
 
 func (qr *questionRepository) FindById(question *model.Question, id uint) error {
 	if err := qr.db.Where("id=?", id).First(question).Error; err != nil {
+		return err
+	}
+	return nil
+}
+
+func (qr *questionRepository) FindAll(questions *[]model.Question) error {
+	if err := qr.db.Find(questions).Error; err != nil {
 		return err
 	}
 	return nil
