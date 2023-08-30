@@ -6,7 +6,7 @@ type SubCategory struct {
 	CategoryId uint   `json:"category_id" gorm:"not null"`
 	CreatedUser   User    `json:"created_user" gorm:"foreignKey:CreatedUserId; constraint:OnDelete:CASCADE"`
 	CreatedUserId   uint `json:"created_user_id" gorm:"not null"`
-	SubCategoryName  string    `json:"sub_category_name"`
-	ViewOrder  int    `json:"view_order"`
+	SubCategoryName  string    `json:"sub_category_name" gorm:"size:50"`
+	ViewOrder  uint    `json:"view_order"`
 	Questions []Question `json:"questions" gorm:"foreignKey:SubCategoryId; constraint:OnDelete:CASCADE"`
 }
