@@ -2,7 +2,7 @@ package model
 
 type User struct {
 	App `gorm:"embedded"`
-	Email     string    `json:"email" gorm:"unique;not null"`
+	Email     string    `json:"email" gorm:"unique;not null size:100"`
 	Password  string    `json:"password" gorm:"not null"`
 	Grades []Grade `json:"grades" gorm:"foreignKey:UserId; constraint:OnDelete:CASCADE"`
 	CreatedCategories []Category `json:"created_categories" gorm:"foreignKey:CreatedUserId; constraint:OnDelete:CASCADE"`
