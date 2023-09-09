@@ -4,6 +4,7 @@ import (
 	"ichimonApi/model"
 	"ichimonApi/repository"
 	"ichimonApi/utility"
+	"ichimonApi/validator"
 )
 type IQuestionUsecase interface {
 
@@ -19,11 +20,11 @@ type IQuestionUsecase interface {
 
 type questionUsecase struct {
 	tr repository.IQuestionRepository
-	// tv validator.IQuestionValidator
+	tv validator.IQuestionValidator
 }
 
-func NewQuestionUsecase(qr repository.IQuestionRepository) IQuestionUsecase {
-	return &questionUsecase{qr}
+func NewQuestionUsecase(qr repository.IQuestionRepository,tv validator.IQuestionValidator) IQuestionUsecase {
+	return &questionUsecase{qr, tv}
 }
 
 func (qu *questionUsecase) FindById(questionId uint) (model.QuestionResponse, error) {
@@ -99,9 +100,9 @@ func (qu *questionUsecase) FindAllByCreatedUserId(createdUserId uint) ([]model.Q
 }
 
 func (qu *questionUsecase) CreateQuestion(question model.Question) (model.QuestionResponse, error) {
-	// if err := qu.tv.QuestionValidate(question); err != nil {
-	// 	return model.QuestionResponse{}, err
-	// }
+	if err := qu.tv.QuestionValidate(question); err != nil {
+		return model.QuestionResponse{}, err
+	}
 	if err := qu.tr.CreateQuestion(&question); err != nil {
 		return model.QuestionResponse{}, err
 	}
