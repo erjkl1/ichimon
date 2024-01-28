@@ -23,7 +23,7 @@ func NewCategoryRepository(db *gorm.DB) ICategoryRepository {
 }
 
 func (cr *categoryRepository) FindByCategoryId(category *model.Category, categoryId uint) error {
-	if err := cr.db.Where("category_id=?", categoryId).First(category).Error; err != nil {
+	if err := cr.db.Where("id=?", categoryId).First(category).Error; err != nil {
 		return err
 	}
 	return nil
@@ -36,9 +36,11 @@ func (cr *categoryRepository) FindBySubCategoryId(category *model.SubCategory, s
 	return nil
 }
 
-//カテゴリとサブカテゴリを全て検索する
+//カテゴリを全て検索する
 func (cr *categoryRepository) FindAllCategories(categories *[]model.Category) error {
-	if err := cr.db.Preload("SubCategory").Find(categories).Error; err != nil {
+	//TODO "SubCategory: unsupported relations for schema Category"
+	// if err := cr.db.Preload("SubCategory").Find(categories).Error; err != nil {
+	if err := cr.db.Find(categories).Error; err != nil {
 		return err
 	}
 	return nil

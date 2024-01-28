@@ -29,16 +29,15 @@ func (cc *categoryController) FindById(c echo.Context) error {
 
 	categoryId, _ := strconv.Atoi(c.Param("categoryId"))
 	
-	category, err := cc.cu.FindById(uint(categoryId))
+	resCategory, err := cc.cu.FindById(uint(categoryId))
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
-	return c.JSON(http.StatusCreated, category)
+	return c.JSON(http.StatusCreated, resCategory)
 }
 
-func (cc *categoryController) FindAll(c echo.Context) error {
-
-	
+//TODO sub_categoryの関連がおかしい？取れない。
+func (cc *categoryController) FindAll(c echo.Context) error {	
 	categories, err := cc.cu.FindAll()
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
@@ -46,6 +45,7 @@ func (cc *categoryController) FindAll(c echo.Context) error {
 	return c.JSON(http.StatusCreated, categories)
 }
 
+//TODO view_order指定できない問題
 func (cc *categoryController) CreateCategory(c echo.Context) error {
 	user := c.Get("user").(*jwt.Token)
 	claims := user.Claims.(jwt.MapClaims)

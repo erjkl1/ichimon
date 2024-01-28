@@ -8,8 +8,8 @@ import (
 )
 
 type ICategoryUsecase interface {
-	FindById(id uint) (model.Category, error)
-	FindAll() ([]model.Category, error)
+	FindById(id uint) (model.CategoryResponse, error)
+	FindAll() ([]model.CategoryResponse, error)
 	CreateCategory(category model.Category) (model.CategoryResponse, error)
 }
 
@@ -22,20 +22,29 @@ func NewCategoryUsecase(cr repository.ICategoryRepository,cv validator.ICategory
 	return &categoryUsecase{cr,cv}
 }
 
-func (cu *categoryUsecase) FindById(categoryId uint) (model.Category, error) {
+func (cu *categoryUsecase) FindById(categoryId uint) (model.CategoryResponse, error) {
 	category := model.Category{}
 	if err := cu.cr.FindByCategoryId(&category, categoryId); err != nil {
-		return model.Category{}, err
+		return model.CategoryResponse{}, err
 	}
-	return category, nil
+	resCategory := model.CategoryResponse{}
+	utility.CopyFields(category, &resCategory)
+	return resCategory, nil
 }
 
-func (cu *categoryUsecase) FindAll() ([]model.Category, error) {
+func (cu *categoryUsecase) FindAll() ([]model.CategoryResponse, error) {
 	categories := []model.Category{}
 	if err := cu.cr.FindAllCategories(&categories); err != nil {
 		return nil, err
 	}
-	return categories, nil
+	resCategories := []model.CategoryResponse{}
+	for _, category := range categories {
+		resCategory := model.CategoryResponse{}
+		//resQuestionにquestionの値が反映されていることを期待
+		utility.CopyFields(category, &resCategory)
+		resCategories = append(resCategories, resCategory)
+	}
+	return resCategories, nil
 }
 
 func (cu *categoryUsecase) CreateCategory(category model.Category) (model.CategoryResponse, error) {
