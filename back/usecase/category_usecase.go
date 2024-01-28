@@ -3,13 +3,14 @@ package usecase
 import (
 	"ichimonApi/model"
 	"ichimonApi/repository"
+	"ichimonApi/utility"
 	"ichimonApi/validator"
 )
 
 type ICategoryUsecase interface {
 	FindById(id uint) (model.Category, error)
 	FindAll() ([]model.Category, error)
-	CreateCategory(category model.Category) (model.Category, error)
+	CreateCategory(category model.Category) (model.CategoryResponse, error)
 }
 
 type categoryUsecase struct {
@@ -37,12 +38,14 @@ func (cu *categoryUsecase) FindAll() ([]model.Category, error) {
 	return categories, nil
 }
 
-func (cu *categoryUsecase) CreateCategory(category model.Category) (model.Category, error) {
+func (cu *categoryUsecase) CreateCategory(category model.Category) (model.CategoryResponse, error) {
 	if err := cu.cv.CategoryValidate(category); err != nil {
-		return model.Category{}, err
+		return model.CategoryResponse{}, err
 	}
 	if err := cu.cr.CreateCategory(&category); err != nil {
-		return model.Category{}, err
+		return model.CategoryResponse{}, err
 	}
-	return category, nil
+	resCategory := model.CategoryResponse{}
+	utility.CopyFields(category, &resCategory)
+	return resCategory, nil
 }

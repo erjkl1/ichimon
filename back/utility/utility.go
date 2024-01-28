@@ -2,6 +2,8 @@ package utility
 
 import "reflect"
 
+
+//targetに存在するカラムにsourceの値をコピーする。
 func CopyFields(source interface{}, target interface{}) {
     sourceValue := reflect.ValueOf(source)
     targetValue := reflect.ValueOf(target).Elem()

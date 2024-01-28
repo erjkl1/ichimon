@@ -57,9 +57,9 @@ func (cc *categoryController) CreateCategory(c echo.Context) error {
 	}
 	// category.UpdatedUserId = uint(createdUserId.(float64))
 	category.CreatedUserId = uint(createdUserId.(float64))
-	category, err := cc.cu.CreateCategory(category)
+	categoryResponse, err := cc.cu.CreateCategory(category)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
-	return c.JSON(http.StatusCreated, category)
+	return c.JSON(http.StatusCreated, categoryResponse)
 }

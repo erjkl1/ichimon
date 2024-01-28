@@ -43,12 +43,15 @@ func NewRouter(uc controller.IUserController, qc controller.IQuestionController,
 	q.POST("", qc.CreateQuestion)
 	// q.PUT("", qc.UpdateQuestion)
 
+	//categories
 	c := e.Group("/categories")
+	c.Use(echojwt.WithConfig(echojwt.Config{
+		SigningKey:  []byte(os.Getenv("SECRET")),
+		TokenLookup: "cookie:token",
+	}))
 	c.GET("", cc.FindAll)
 	c.GET("/:categoryId", cc.FindById)
 	c.POST("", cc.CreateCategory)
 
-	// t.PUT("/:taskId", qc.UpdateTask)
-	// t.DELETE("/:taskId", qc.DeleteTask)
 	return e
 }
