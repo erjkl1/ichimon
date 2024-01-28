@@ -10,7 +10,7 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 )
 
-func NewRouter(uc controller.IUserController, qc controller.IQuestionController) *echo.Echo {
+func NewRouter(uc controller.IUserController, qc controller.IQuestionController, cc controller.ICategoryController) *echo.Echo {
 	e := echo.New()
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 		AllowOrigins: []string{"http://localhost:3000", os.Getenv("FE_URL")},
@@ -31,14 +31,23 @@ func NewRouter(uc controller.IUserController, qc controller.IQuestionController)
 	e.POST("/login", uc.LogIn)
 	e.POST("/logout", uc.LogOut)
 	e.GET("/csrf", uc.CsrfToken)
-	t := e.Group("/questions")
-	t.Use(echojwt.WithConfig(echojwt.Config{
+
+	//question
+	q := e.Group("/questions")
+	q.Use(echojwt.WithConfig(echojwt.Config{
 		SigningKey:  []byte(os.Getenv("SECRET")),
 		TokenLookup: "cookie:token",
 	}))
-	t.GET("", qc.FindAll)
-	t.GET("/:questionId", qc.FindById)
-	t.POST("", qc.CreateQuestion)
+	q.GET("", qc.FindAll)
+	q.GET("/:questionId", qc.FindById)
+	q.POST("", qc.CreateQuestion)
+	// q.PUT("", qc.UpdateQuestion)
+
+	c := e.Group("/categories")
+	c.GET("", cc.FindAll)
+	c.GET("/:categoryId", cc.FindById)
+	c.POST("", cc.CreateCategory)
+
 	// t.PUT("/:taskId", qc.UpdateTask)
 	// t.DELETE("/:taskId", qc.DeleteTask)
 	return e

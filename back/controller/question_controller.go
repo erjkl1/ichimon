@@ -100,6 +100,32 @@ func (qc *questionController) CreateQuestion(c echo.Context) error {
 	return c.JSON(http.StatusCreated, questionResponse)
 }
 
+// func (qc *questionController) UpdateQuestion(c echo.Context) error {
+// 	user := c.Get("user").(*jwt.Token)
+// 	claims := user.Claims.(jwt.MapClaims)
+// 	updatedUserId := claims["user_id"]
+
+// 	// IDをjsonから取得？
+// 	questionId, _ := strconv.Atoi(c.Param("questionId"))
+// 	// 指定されたIDで見つからなければエラー
+// 	questionResponse, err := qc.qu.FindById(uint(questionId))
+// 	if err != nil {
+// 		return c.JSON(http.StatusInternalServerError, err.Error())
+// 	}
+
+
+// 	question := model.Question{}
+// 	if err := c.Bind(&question); err != nil {
+// 		return c.JSON(http.StatusBadRequest, err.Error())
+// 	}
+// 	question.UpdatedUserId = uint(updatedUserId.(float64))
+// 	questionResponse, err := qc.qu.UpdateQuestion(question)
+// 	if err != nil {
+// 		return c.JSON(http.StatusInternalServerError, err.Error())
+// 	}
+// 	return c.JSON(http.StatusCreated, questionResponse)
+// }
+
 func (qc *questionController) CsrfToken(c echo.Context) error {
 	token := c.Get("csrf").(string)
 	return c.JSON(http.StatusOK, echo.Map{

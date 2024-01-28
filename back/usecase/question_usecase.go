@@ -19,17 +19,17 @@ type IQuestionUsecase interface {
 }
 
 type questionUsecase struct {
-	tr repository.IQuestionRepository
-	tv validator.IQuestionValidator
+	qr repository.IQuestionRepository
+	qv validator.IQuestionValidator
 }
 
-func NewQuestionUsecase(qr repository.IQuestionRepository,tv validator.IQuestionValidator) IQuestionUsecase {
-	return &questionUsecase{qr, tv}
+func NewQuestionUsecase(qr repository.IQuestionRepository,qv validator.IQuestionValidator) IQuestionUsecase {
+	return &questionUsecase{qr, qv}
 }
 
 func (qu *questionUsecase) FindById(questionId uint) (model.QuestionResponse, error) {
 	question := model.Question{}
-	if err := qu.tr.FindById(&question, questionId); err != nil {
+	if err := qu.qr.FindById(&question, questionId); err != nil {
 		return model.QuestionResponse{}, err
 	}
 	resQuestion := model.QuestionResponse{}
@@ -39,7 +39,7 @@ func (qu *questionUsecase) FindById(questionId uint) (model.QuestionResponse, er
 
 func (qu *questionUsecase) FindAll() ([]model.QuestionResponse, error) {
 	questions := []model.Question{}
-	if err := qu.tr.FindAll(&questions); err != nil {
+	if err := qu.qr.FindAll(&questions); err != nil {
 		return nil, err
 	}
 	resQuestions := []model.QuestionResponse{}
@@ -52,10 +52,9 @@ func (qu *questionUsecase) FindAll() ([]model.QuestionResponse, error) {
 	return resQuestions, nil
 }
 
-
 func (qu *questionUsecase) FindAllByCategoryId(categoryId uint) ([]model.QuestionResponse, error) {
 	questions := []model.Question{}
-	if err := qu.tr.FindAllByCategoryId(&questions, categoryId); err != nil {
+	if err := qu.qr.FindAllByCategoryId(&questions, categoryId); err != nil {
 		return nil, err
 	}
 	resQuestions := []model.QuestionResponse{}
@@ -70,7 +69,7 @@ func (qu *questionUsecase) FindAllByCategoryId(categoryId uint) ([]model.Questio
 
 func (qu *questionUsecase) FindAllBySubCategoryId(subCategoryId uint) ([]model.QuestionResponse, error) {
 	questions := []model.Question{}
-	if err := qu.tr.FindAllBySubCategoryId(&questions, subCategoryId); err != nil {
+	if err := qu.qr.FindAllBySubCategoryId(&questions, subCategoryId); err != nil {
 		return nil, err
 	}
 	resQuestions := []model.QuestionResponse{}
@@ -85,7 +84,7 @@ func (qu *questionUsecase) FindAllBySubCategoryId(subCategoryId uint) ([]model.Q
 
 func (qu *questionUsecase) FindAllByCreatedUserId(createdUserId uint) ([]model.QuestionResponse, error) {
 	questions := []model.Question{}
-	if err := qu.tr.FindAllByCreatedUserId(&questions, createdUserId); err != nil {
+	if err := qu.qr.FindAllByCreatedUserId(&questions, createdUserId); err != nil {
 		return nil, err
 	}
 	resQuestions := []model.QuestionResponse{}
@@ -100,10 +99,10 @@ func (qu *questionUsecase) FindAllByCreatedUserId(createdUserId uint) ([]model.Q
 }
 
 func (qu *questionUsecase) CreateQuestion(question model.Question) (model.QuestionResponse, error) {
-	if err := qu.tv.QuestionValidate(question); err != nil {
+	if err := qu.qv.QuestionValidate(question); err != nil {
 		return model.QuestionResponse{}, err
 	}
-	if err := qu.tr.CreateQuestion(&question); err != nil {
+	if err := qu.qr.CreateQuestion(&question); err != nil {
 		return model.QuestionResponse{}, err
 	}
 	resQuestion := model.QuestionResponse{}
@@ -112,10 +111,10 @@ func (qu *questionUsecase) CreateQuestion(question model.Question) (model.Questi
 }
 
 // func (qu *questionUsecase) UpdateQuestion(question model.Question, userId uint, questionId uint) (model.QuestionResponse, error) {
-// 	if err := qu.tv.QuestionValidate(question); err != nil {
+// 	if err := qu.qv.QuestionValidate(question); err != nil {
 // 		return model.QuestionResponse{}, err
 // 	}
-// 	if err := qu.tr.UpdateQuestion(&question, userId, questionId); err != nil {
+// 	if err := qu.qr.UpdateQuestion(&question, userId, questionId); err != nil {
 // 		return model.QuestionResponse{}, err
 // 	}
 // 	resQuestion := model.QuestionResponse{
@@ -128,7 +127,7 @@ func (qu *questionUsecase) CreateQuestion(question model.Question) (model.Questi
 // }
 
 // func (qu *questionUsecase) DeleteQuestion(userId uint, questionId uint) error {
-// 	if err := qu.tr.DeleteQuestion(userId, questionId); err != nil {
+// 	if err := qu.qr.DeleteQuestion(userId, questionId); err != nil {
 // 		return err
 // 	}
 // 	return nil

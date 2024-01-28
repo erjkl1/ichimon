@@ -1,18 +1,12 @@
 package main
 
 import (
-
-	// "ichimonApi/controller"
 	"ichimonApi/controller"
 	"ichimonApi/db"
 	"ichimonApi/repository"
 	"ichimonApi/router"
 	"ichimonApi/usecase"
 	"ichimonApi/validator"
-	// "ichimonApi/repository"
-	// "ichimonApi/router"
-	// "ichimonApi/usecase"
-	// "ichimonApi/validator"
 )
 
 func main() {
@@ -20,11 +14,13 @@ func main() {
 
 	userValidator := validator.NewUserValidator()
 	questionValidator := validator.NewQuestionValidator()
-	questionValidator := validator.NewCategoryValidator()
+	categoryValidator := validator.NewCategoryValidator()
+	// subCategoryValidator := validator.NewSubCategoryValidator()
 
 	userRepository := repository.NewUserRepository(db)
 	questionRepository := repository.NewQuestionRepository(db)
 	categoryRepository := repository.NewCategoryRepository(db)
+	// subCategoryRepository := repository.NewCategoryRepository(db)
 	
 	userUsecase := usecase.NewUserUsecase(userRepository, userValidator)
 	questionUsecase := usecase.NewQuestionUsecase(questionRepository, questionValidator)
@@ -34,6 +30,6 @@ func main() {
 	questionController := controller.NewQuestionController(questionUsecase)
 	categoryController := controller.NewCategoryController(categoryUsecase)
 
-	e := router.NewRouter(userController,questionController)
+	e := router.NewRouter(userController,questionController,categoryController) 
 	e.Logger.Fatal(e.Start(":8080"))
 }
