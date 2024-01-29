@@ -3,7 +3,6 @@ package validator
 import (
 	"ichimonApi/model"
 
-	"github.com/go-ozzo/ozzo-validation/is"
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 )
 
@@ -30,7 +29,7 @@ func (tv *categoryValidator) CategoryValidate(category model.Category) error {
 		),
 		validation.Field(
 			&category.ViewOrder,
-			is.Int.Error("view_order is required"),
+			validation.Required.Error("view_order is required"),
 		),
 	)
 }
