@@ -39,8 +39,8 @@ func (cr *categoryRepository) FindBySubCategoryId(category *model.SubCategory, s
 //カテゴリを全て検索する
 func (cr *categoryRepository) FindAllCategories(categories *[]model.Category) error {
 	//TODO "SubCategory: unsupported relations for schema Category"
-	// if err := cr.db.Preload("SubCategory").Find(categories).Error; err != nil {
-	if err := cr.db.Find(categories).Error; err != nil {
+	if err := cr.db.Preload("SubCategories").Find(categories).Error; err != nil {
+	// if err := cr.db.Find(categories).Error; err != nil {
 		return err
 	}
 	return nil

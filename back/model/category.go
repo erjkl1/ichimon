@@ -14,4 +14,5 @@ type CategoryResponse struct {
 	CreatedUserId   uint `json:"created_user_id" gorm:"not null"`
 	CategoryName  string    `json:"category_name" gorm:"size:50"`
 	ViewOrder  uint    `json:"view_order"`
+	SubCategories []SubCategory  `json:"sub_categories" gorm:"foreignKey:CategoryId; constraint:OnDelete:CASCADE"`
 }

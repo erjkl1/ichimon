@@ -10,3 +10,12 @@ type SubCategory struct {
 	ViewOrder  uint    `json:"view_order"`
 	Questions []Question `json:"questions" gorm:"foreignKey:SubCategoryId; constraint:OnDelete:CASCADE"`
 }
+
+type SubCategoryResponse struct {
+	App  `gorm:"embedded"`
+	Category Category   `json:"category" gorm:"foreignKey:CategoryId; constraint:OnDelete:CASCADE"`
+	CreatedUserId   uint `json:"created_user_id" gorm:"not null"`
+	SubCategoryName  string    `json:"sub_category_name" gorm:"size:50"`
+	ViewOrder  uint    `json:"view_order"`
+	Questions []Question `json:"questions" gorm:"foreignKey:SubCategoryId; constraint:OnDelete:CASCADE"`
+}

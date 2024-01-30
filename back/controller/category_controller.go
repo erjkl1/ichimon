@@ -14,7 +14,7 @@ type ICategoryController interface {
 	FindById(c echo.Context) error
 	FindAll(c echo.Context) error
 	CreateCategory(c echo.Context) error
-	// CsrfToken(c echo.Context) error
+	CreateSubCategory(c echo.Context) error
 }
 
 type categoryController struct {
@@ -58,6 +58,24 @@ func (cc *categoryController) CreateCategory(c echo.Context) error {
 	// category.UpdatedUserId = uint(createdUserId.(float64))
 	category.CreatedUserId = uint(createdUserId.(float64))
 	categoryResponse, err := cc.cu.CreateCategory(category)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+	return c.JSON(http.StatusCreated, categoryResponse)
+}
+
+func (cc *categoryController) CreateSubCategory(c echo.Context) error {
+	user := c.Get("user").(*jwt.Token)
+	claims := user.Claims.(jwt.MapClaims)
+	createdUserId := claims["user_id"]
+
+	subCategory := model.SubCategory{}
+	if err := c.Bind(&subCategory); err != nil {
+		return c.JSON(http.StatusBadRequest, err.Error())
+	}
+	// subCategory.UpdatedUserId = uint(createdUserId.(float64))
+	subCategory.CreatedUserId = uint(createdUserId.(float64))
+	categoryResponse, err := cc.cu.CreateSubCategory(subCategory)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}

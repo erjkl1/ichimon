@@ -11,6 +11,7 @@ type ICategoryUsecase interface {
 	FindById(id uint) (model.CategoryResponse, error)
 	FindAll() ([]model.CategoryResponse, error)
 	CreateCategory(category model.Category) (model.CategoryResponse, error)
+	CreateSubCategory(category model.SubCategory) (model.SubCategoryResponse, error)
 }
 
 type categoryUsecase struct {
@@ -48,6 +49,18 @@ func (cu *categoryUsecase) FindAll() ([]model.CategoryResponse, error) {
 }
 
 func (cu *categoryUsecase) CreateCategory(category model.Category) (model.CategoryResponse, error) {
+	if err := cu.cv.CategoryValidate(category); err != nil {
+		return model.CategoryResponse{}, err
+	}
+	if err := cu.cr.CreateCategory(&category); err != nil {
+		return model.CategoryResponse{}, err
+	}
+	resCategory := model.CategoryResponse{}
+	utility.CopyFields(category, &resCategory)
+	return resCategory, nil
+}
+
+func (cu *categoryUsecase) CreateSubCategory(subCategory model.SubCategory) (model.SubCategoryResponse, error) {
 	if err := cu.cv.CategoryValidate(category); err != nil {
 		return model.CategoryResponse{}, err
 	}
