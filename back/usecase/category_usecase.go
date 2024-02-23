@@ -17,10 +17,11 @@ type ICategoryUsecase interface {
 type categoryUsecase struct {
 	cr repository.ICategoryRepository
 	cv validator.ICategoryValidator
+	scv validator.ISubCategoryValidator
 }
 
-func NewCategoryUsecase(cr repository.ICategoryRepository,cv validator.ICategoryValidator) ICategoryUsecase {
-	return &categoryUsecase{cr,cv}
+func NewCategoryUsecase(cr repository.ICategoryRepository,cv validator.ICategoryValidator,scv validator.ISubCategoryValidator) ICategoryUsecase {
+	return &categoryUsecase{cr,cv,scv}
 }
 
 func (cu *categoryUsecase) FindById(categoryId uint) (model.CategoryResponse, error) {
@@ -61,13 +62,13 @@ func (cu *categoryUsecase) CreateCategory(category model.Category) (model.Catego
 }
 
 func (cu *categoryUsecase) CreateSubCategory(subCategory model.SubCategory) (model.SubCategoryResponse, error) {
-	if err := cu.cv.CategoryValidate(category); err != nil {
-		return model.CategoryResponse{}, err
+	if err := cu.scv.SubCategoryValidate(subCategory); err != nil {
+		return model.SubCategoryResponse{}, err
 	}
-	if err := cu.cr.CreateCategory(&category); err != nil {
-		return model.CategoryResponse{}, err
+	if err := cu.cr.CreateSubCategory(&subCategory); err != nil {
+		return model.SubCategoryResponse{}, err
 	}
-	resCategory := model.CategoryResponse{}
-	utility.CopyFields(category, &resCategory)
-	return resCategory, nil
+	resSubCategory := model.SubCategoryResponse{}
+	utility.CopyFields(subCategory, &resSubCategory)
+	return resSubCategory, nil
 }

@@ -15,7 +15,7 @@ func main() {
 	userValidator := validator.NewUserValidator()
 	questionValidator := validator.NewQuestionValidator()
 	categoryValidator := validator.NewCategoryValidator()
-	// subCategoryValidator := validator.NewSubCategoryValidator()
+	subCategoryValidator := validator.NewSubCategoryValidator()
 
 	userRepository := repository.NewUserRepository(db)
 	questionRepository := repository.NewQuestionRepository(db)
@@ -24,7 +24,7 @@ func main() {
 	
 	userUsecase := usecase.NewUserUsecase(userRepository, userValidator)
 	questionUsecase := usecase.NewQuestionUsecase(questionRepository, questionValidator)
-	categoryUsecase := usecase.NewCategoryUsecase(categoryRepository, categoryValidator)
+	categoryUsecase := usecase.NewCategoryUsecase(categoryRepository, categoryValidator, subCategoryValidator)
 
 	userController := controller.NewUserController(userUsecase)
 	questionController := controller.NewQuestionController(questionUsecase)

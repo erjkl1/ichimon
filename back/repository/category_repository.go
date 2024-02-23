@@ -12,6 +12,7 @@ type ICategoryRepository interface {
 	FindBySubCategoryId(category *model.SubCategory, subCategoryId uint) error
 	FindAllCategories(categories *[]model.Category) error
 	CreateCategory(category *model.Category) error
+	CreateSubCategory(subCategory *model.SubCategory) error
 }
 
 type categoryRepository struct {
@@ -49,6 +50,14 @@ func (cr *categoryRepository) FindAllCategories(categories *[]model.Category) er
 //カテゴリを作成
 func (cr *categoryRepository) CreateCategory(category *model.Category) error {
 	if err := cr.db.Create(category).Error; err != nil {
+		return err
+	}
+	return nil
+}
+
+//サブカテゴリを作成
+func (cr *categoryRepository) CreateSubCategory(subCategory *model.SubCategory) error {
+	if err := cr.db.Create(subCategory).Error; err != nil {
 		return err
 	}
 	return nil
