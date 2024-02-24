@@ -1,0 +1,112 @@
+basePath: /
+definitions:
+  model.CsrfTokenResponse:
+    properties:
+      csrf_token:
+        type: string
+    type: object
+  model.UserCreateRequest:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    type: object
+  model.UserResponse:
+    properties:
+      email:
+        type: string
+      id:
+        type: integer
+    type: object
+host: localhost:8080
+info:
+  contact:
+    name: API Support
+    url: https://twitter.com/Chuke_yamaha
+  description: Api for IchimonItto App
+  title: IchimonItto API
+  version: "1.0"
+paths:
+  /csrf:
+    get:
+      consumes:
+      - application/json
+      description: Provides a CSRF token for client to use in subsequent POST requests
+        for CSRF protection
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK - CSRF token provided
+          schema:
+            $ref: '#/definitions/model.CsrfTokenResponse'
+      summary: CSRF token retrieval
+      tags:
+      - security
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: Logs in a user and returns a session token as a cookie
+      parameters:
+      - description: Login Credentials
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/model.UserCreateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK - Successfully authenticated
+        "400":
+          description: Bad Request - Invalid request format or parameters
+          schema:
+            type: string
+        "401":
+          description: Unauthorized - Invalid login credentials
+          schema:
+            type: string
+      summary: User login
+      tags:
+      - users
+  /logout:
+    get:
+      consumes:
+      - application/json
+      description: Clears the user's session token to log out
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content - Successfully logged out
+      summary: User logout
+      tags:
+      - users
+  /signup:
+    post:
+      consumes:
+      - application/json
+      description: Register a new user
+      parameters:
+      - description: Register User
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/model.UserCreateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.UserResponse'
+      summary: User registration
+      tags:
+      - users
+schemes:
+- https
+swagger: "2.0"

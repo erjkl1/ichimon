@@ -8,6 +8,9 @@ import (
 	echojwt "github.com/labstack/echo-jwt/v4"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	echoSwagger "github.com/swaggo/echo-swagger" // echo-swagger middleware
+
+	_ "ichimonApi/docs"
 )
 
 func NewRouter(uc controller.IUserController, qc controller.IQuestionController, cc controller.ICategoryController) *echo.Echo {
@@ -27,6 +30,9 @@ func NewRouter(uc controller.IUserController, qc controller.IQuestionController,
 		//CookieSameSite: http.SameSiteDefaultMode,
 		//CookieMaxAge:   60,
 	}))
+
+    // Swaggerのルートを設定
+    e.GET("/swagger/*", echoSwagger.WrapHandler)
 	e.POST("/signup", uc.SignUp)
 	e.POST("/login", uc.LogIn)
 	e.POST("/logout", uc.LogOut)

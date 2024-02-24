@@ -11,7 +11,16 @@ type User struct {
 	UpdatedQuestions []Question `json:"updateed_questions" gorm:"foreignKey:UpdatedUserId; constraint:OnDelete:CASCADE"`
 }
 
+type UserCreateRequest struct {
+	Email     string    `json:"email" gorm:"unique;not null size:100"`
+	Password  string    `json:"password" gorm:"not null"`
+}
+
 type UserResponse struct {
 	ID    uint   `json:"id" gorm:"primaryKey"`
 	Email string `json:"email" gorm:"unique"`
+}
+
+type CsrfTokenResponse struct {
+	CsrfToken string `json:"csrf_token"`
 }

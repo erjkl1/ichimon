@@ -7,7 +7,29 @@ import (
 	"ichimonApi/router"
 	"ichimonApi/usecase"
 	"ichimonApi/validator"
+
+	_ "ichimonApi/docs"
 )
+
+// @title IchimonItto API
+// @version 1.0
+// @description Api for IchimonItto App
+
+// @contact.name API Support
+// @contact.url https://twitter.com/Chuke_yamaha
+
+// @host localhost:8080
+// @BasePath /
+// @schemes https
+
+// HealthCheck godoc
+// @Summary Show the status of server.
+// @Description get the status of server.
+// @Tags root
+// @Accept */*
+// @Produce json
+// @Success 200 {object} map[string]interface{}
+// @Router / [get]
 
 func main() {
 	db := db.NewDB()
