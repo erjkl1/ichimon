@@ -19,3 +19,9 @@ type SubCategoryResponse struct {
 	ViewOrder  uint    `json:"view_order"`
 	Questions []Question `json:"questions" gorm:"foreignKey:SubCategoryId; constraint:OnDelete:CASCADE"`
 }
+
+type CreateSubCategoryRequest struct {
+	CategoryId uint   `json:"category_id" gorm:"not null"`
+	SubCategoryName  string    `json:"sub_category_name" gorm:"size:50"`
+	ViewOrder  uint    `json:"view_order"`
+}

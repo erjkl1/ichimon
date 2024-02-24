@@ -18,9 +18,99 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/categories": {
+            "get": {
+                "description": "登録されているすべてのカテゴリを検索し、結果を返します。",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "category"
+                ],
+                "summary": "すべてのカテゴリの検索",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.CategoryResponse"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "新しいカテゴリを作成します。",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "category"
+                ],
+                "summary": "カテゴリの作成",
+                "parameters": [
+                    {
+                        "description": "Create Category",
+                        "name": "category",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.CreateCategoryRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/model.CategoryResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/categories/{categoryId}": {
+            "get": {
+                "description": "指定されたIDを持つカテゴリを検索し、結果を返します。",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "category"
+                ],
+                "summary": "カテゴリIDによる検索",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Category ID",
+                        "name": "categoryId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.CategoryResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/csrf": {
             "get": {
-                "description": "Provides a CSRF token for client to use in subsequent POST requests for CSRF protection",
+                "description": "CSRFトークンを取得する。",
                 "consumes": [
                     "application/json"
                 ],
@@ -30,7 +120,7 @@ const docTemplate = `{
                 "tags": [
                     "security"
                 ],
-                "summary": "CSRF token retrieval",
+                "summary": "CSRFトークンを取得する。",
                 "responses": {
                     "200": {
                         "description": "OK - CSRF token provided",
@@ -43,7 +133,7 @@ const docTemplate = `{
         },
         "/login": {
             "post": {
-                "description": "Logs in a user and returns a session token as a cookie",
+                "description": "クッキーにログインセッションを記録する。",
                 "consumes": [
                     "application/json"
                 ],
@@ -53,7 +143,7 @@ const docTemplate = `{
                 "tags": [
                     "users"
                 ],
-                "summary": "User login",
+                "summary": "ログイン",
                 "parameters": [
                     {
                         "description": "Login Credentials",
@@ -86,7 +176,7 @@ const docTemplate = `{
         },
         "/logout": {
             "get": {
-                "description": "Clears the user's session token to log out",
+                "description": "クッキーに格納されているログインセッションを削除する。",
                 "consumes": [
                     "application/json"
                 ],
@@ -96,7 +186,7 @@ const docTemplate = `{
                 "tags": [
                     "users"
                 ],
-                "summary": "User logout",
+                "summary": "ログアウト",
                 "responses": {
                     "204": {
                         "description": "No Content - Successfully logged out"
@@ -104,9 +194,246 @@ const docTemplate = `{
                 }
             }
         },
+        "/questions": {
+            "get": {
+                "description": "登録されているすべての問題を検索し、結果を返します。",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "question"
+                ],
+                "summary": "すべての問題の検索",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.QuestionResponse"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "新しい問題を作成し、データベースに保存します。",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "question"
+                ],
+                "summary": "新しい問題の作成",
+                "parameters": [
+                    {
+                        "description": "Create Question",
+                        "name": "question",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.Question"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/model.QuestionResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/questions/category/{categoryId}": {
+            "get": {
+                "description": "指定されたカテゴリIDに属する問題をすべて検索し、結果を返します。",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "question"
+                ],
+                "summary": "カテゴリIDに基づく問題の検索",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Category ID",
+                        "name": "categoryId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.QuestionResponse"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/questions/subcategory/{subCategoryId}": {
+            "get": {
+                "description": "指定されたサブカテゴリIDに属する問題をすべて検索し、結果を返します。",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "question"
+                ],
+                "summary": "サブカテゴリIDに基づく問題の検索",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "SubCategory ID",
+                        "name": "subCategoryId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.QuestionResponse"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/questions/user/{createdUserId}": {
+            "get": {
+                "description": "指定された作成者IDで作成された問題をすべて検索し、結果を返します。",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "question"
+                ],
+                "summary": "作成者IDに基づく問題の検索",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Created User ID",
+                        "name": "createdUserId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.QuestionResponse"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/questions/{questionId}": {
+            "get": {
+                "description": "指定されたIDを持つ問題を検索し、結果を返します。",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "question"
+                ],
+                "summary": "問題IDによる検索",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Question ID",
+                        "name": "questionId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.QuestionResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/signup": {
             "post": {
-                "description": "Register a new user",
+                "description": "新しいユーザーを登録します。",
                 "consumes": [
                     "application/json"
                 ],
@@ -116,7 +443,7 @@ const docTemplate = `{
                 "tags": [
                     "users"
                 ],
-                "summary": "User registration",
+                "summary": "ユーザー登録",
                 "parameters": [
                     {
                         "description": "Register User",
@@ -137,14 +464,431 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/subcategories": {
+            "post": {
+                "description": "新しいサブカテゴリを作成します。",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "category"
+                ],
+                "summary": "サブカテゴリの作成",
+                "parameters": [
+                    {
+                        "description": "Create SubCategory",
+                        "name": "subCategory",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.CreateSubCategoryRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/model.SubCategoryResponse"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
+        "gorm.DeletedAt": {
+            "type": "object",
+            "properties": {
+                "time": {
+                    "type": "string"
+                },
+                "valid": {
+                    "description": "Valid is true if Time is not NULL",
+                    "type": "boolean"
+                }
+            }
+        },
+        "model.Category": {
+            "type": "object",
+            "properties": {
+                "category_name": {
+                    "type": "string"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "created_user": {
+                    "$ref": "#/definitions/model.User"
+                },
+                "created_user_id": {
+                    "type": "integer"
+                },
+                "deletedAt": {
+                    "$ref": "#/definitions/gorm.DeletedAt"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "sub_categories": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.SubCategory"
+                    }
+                },
+                "updatedAt": {
+                    "type": "string"
+                },
+                "view_order": {
+                    "type": "integer"
+                }
+            }
+        },
+        "model.CategoryResponse": {
+            "type": "object",
+            "properties": {
+                "category_name": {
+                    "type": "string"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "created_user_id": {
+                    "type": "integer"
+                },
+                "deletedAt": {
+                    "$ref": "#/definitions/gorm.DeletedAt"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "sub_categories": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.SubCategory"
+                    }
+                },
+                "updatedAt": {
+                    "type": "string"
+                },
+                "view_order": {
+                    "type": "integer"
+                }
+            }
+        },
+        "model.CreateCategoryRequest": {
+            "type": "object",
+            "properties": {
+                "category_name": {
+                    "type": "string"
+                },
+                "view_order": {
+                    "type": "integer"
+                }
+            }
+        },
+        "model.CreateSubCategoryRequest": {
+            "type": "object",
+            "properties": {
+                "category_id": {
+                    "type": "integer"
+                },
+                "sub_category_name": {
+                    "type": "string"
+                },
+                "view_order": {
+                    "type": "integer"
+                }
+            }
+        },
         "model.CsrfTokenResponse": {
             "type": "object",
             "properties": {
                 "csrf_token": {
                     "type": "string"
+                }
+            }
+        },
+        "model.Grade": {
+            "type": "object",
+            "properties": {
+                "correction": {
+                    "type": "boolean"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "deletedAt": {
+                    "$ref": "#/definitions/gorm.DeletedAt"
+                },
+                "good_status": {
+                    "type": "boolean"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "question": {
+                    "$ref": "#/definitions/model.Question"
+                },
+                "question_id": {
+                    "type": "integer"
+                },
+                "updatedAt": {
+                    "type": "string"
+                },
+                "user": {
+                    "$ref": "#/definitions/model.User"
+                },
+                "user_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "model.Question": {
+            "type": "object",
+            "properties": {
+                "answer": {
+                    "type": "integer"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "created_user": {
+                    "$ref": "#/definitions/model.User"
+                },
+                "created_user_id": {
+                    "type": "integer"
+                },
+                "deletedAt": {
+                    "$ref": "#/definitions/gorm.DeletedAt"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "grades": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Grade"
+                    }
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "selection_1": {
+                    "type": "string"
+                },
+                "selection_2": {
+                    "type": "string"
+                },
+                "selection_3": {
+                    "type": "string"
+                },
+                "selection_4": {
+                    "type": "string"
+                },
+                "statement": {
+                    "type": "string"
+                },
+                "sub_category": {
+                    "$ref": "#/definitions/model.SubCategory"
+                },
+                "sub_category_id": {
+                    "type": "integer"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "type": "string"
+                },
+                "updated_user": {
+                    "$ref": "#/definitions/model.User"
+                },
+                "updated_user_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "model.QuestionResponse": {
+            "type": "object",
+            "properties": {
+                "answer": {
+                    "type": "boolean"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "created_user_id": {
+                    "type": "integer"
+                },
+                "deletedAt": {
+                    "$ref": "#/definitions/gorm.DeletedAt"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "selection_1": {
+                    "type": "string"
+                },
+                "selection_2": {
+                    "type": "string"
+                },
+                "selection_3": {
+                    "type": "string"
+                },
+                "selection_4": {
+                    "type": "string"
+                },
+                "statement": {
+                    "type": "string"
+                },
+                "sub_category_id": {
+                    "type": "integer"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "type": "string"
+                },
+                "updated_user_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "model.SubCategory": {
+            "type": "object",
+            "properties": {
+                "category": {
+                    "$ref": "#/definitions/model.Category"
+                },
+                "category_id": {
+                    "type": "integer"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "created_user": {
+                    "$ref": "#/definitions/model.User"
+                },
+                "created_user_id": {
+                    "type": "integer"
+                },
+                "deletedAt": {
+                    "$ref": "#/definitions/gorm.DeletedAt"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "questions": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Question"
+                    }
+                },
+                "sub_category_name": {
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "type": "string"
+                },
+                "view_order": {
+                    "type": "integer"
+                }
+            }
+        },
+        "model.SubCategoryResponse": {
+            "type": "object",
+            "properties": {
+                "category": {
+                    "$ref": "#/definitions/model.Category"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "created_user_id": {
+                    "type": "integer"
+                },
+                "deletedAt": {
+                    "$ref": "#/definitions/gorm.DeletedAt"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "questions": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Question"
+                    }
+                },
+                "sub_category_name": {
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "type": "string"
+                },
+                "view_order": {
+                    "type": "integer"
+                }
+            }
+        },
+        "model.User": {
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
+                "created_categories": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Category"
+                    }
+                },
+                "created_questions": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Question"
+                    }
+                },
+                "created_sub_categories": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.SubCategory"
+                    }
+                },
+                "deletedAt": {
+                    "$ref": "#/definitions/gorm.DeletedAt"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "grades": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Grade"
+                    }
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "type": "string"
+                },
+                "updateed_questions": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Question"
+                    }
                 }
             }
         },

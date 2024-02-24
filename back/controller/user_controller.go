@@ -26,8 +26,8 @@ func NewUserController(uu usecase.IUserUsecase) IUserController {
 }
 
 // SignUp godoc
-// @Summary User registration
-// @Description Register a new user
+// @Summary ユーザー登録
+// @Description 新しいユーザーを登録します。
 // @Tags users
 // @Accept json
 // @Produce json
@@ -47,8 +47,8 @@ func (uc *userController) SignUp(c echo.Context) error {
 }
 
 // LogIn godoc
-// @Summary User login
-// @Description Logs in a user and returns a session token as a cookie
+// @Summary ログイン
+// @Description クッキーにログインセッションを記録する。
 // @Tags users
 // @Accept json
 // @Produce json
@@ -80,8 +80,8 @@ func (uc *userController) LogIn(c echo.Context) error {
 }
 
 // LogOut godoc
-// @Summary User logout
-// @Description Clears the user's session token to log out
+// @Summary ログアウト
+// @Description クッキーに格納されているログインセッションを削除する。
 // @Tags users
 // @Accept json
 // @Produce json
@@ -102,8 +102,8 @@ func (uc *userController) LogOut(c echo.Context) error {
 }
 
 // CsrfToken godoc
-// @Summary CSRF token retrieval
-// @Description Provides a CSRF token for client to use in subsequent POST requests for CSRF protection
+// @Summary CSRFトークンを取得する。
+// @Description CSRFトークンを取得する。
 // @Tags security
 // @Accept json
 // @Produce json

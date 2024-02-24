@@ -46,6 +46,9 @@ func NewRouter(uc controller.IUserController, qc controller.IQuestionController,
 	}))
 	q.GET("", qc.FindAll)
 	q.GET("/:questionId", qc.FindById)
+	q.GET("/category/:categoryId", qc.FindAllByCategoryId)
+	q.GET("/subcategory/:subCategoryId", qc.FindAllBySubCategoryId)
+	q.GET("/user/:createdUserId", qc.FindAllByCreatedUserId)
 	q.POST("", qc.CreateQuestion)
 	// q.PUT("", qc.UpdateQuestion)
 
