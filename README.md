@@ -20,3 +20,7 @@ http://localhost:8080/swagger/index.html
 swagger init コマンド
 swag init --parseDependency --parseInternal
 https://github.com/swaggo/swag/issues/810
+
+swaggerインストールが必要のため以下を実行。
+go install github.com/swaggo/swag/cmd/swag@latest
+export PATH=$PATH:$(go env GOPATH)/bin
