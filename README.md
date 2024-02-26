@@ -13,3 +13,10 @@ localhost:8080/csrf （GET）で csrf トークン取得、X-CSRF-TOKEN にて�
 localhost:8080/login （POST）でログイン、ボディに json で email と password を持たせる。(セットクッキーで token がクッキーにセットされる)
 ↓
 任意のエンドポイントにリクエストを飛ばす。questions 作成は動作確認。
+
+API ドキュメント
+http://localhost:8080/swagger/index.html
+
+swagger init コマンド
+swag init --parseDependency --parseInternal
+https://github.com/swaggo/swag/issues/810
